@@ -28,17 +28,41 @@ def positionAllowed(inputPhrase):
         val = input(inputPhrase)
     return int(val)
 
+def legalPlay(row, col):
+    """
+    Returns true if the player has selected an unoccipied space.
+    REturns false if they need to play again
+    """
+    return gameBoard[row][col] == " "
+
+
 initialize()
 
-row = positionAllowed(F"{player} what row would you like to play in? Pick a value 1,2 or 3") - 1
-col = positionAllowed(F"{player} which column would you like to play in? Pick a value 1,2 or 3") - 1
-#check to make sure that space is blank
-if gameBoard[row][col] == " ":
+while not gameOver:
+    row = positionAllowed(F"{player} what row would you like to play in? Pick a value 1,2 or 3") - 1
+    col = positionAllowed(F"{player} which column would you like to play in? Pick a value 1,2 or 3") - 1
+
+    while not legalPlay(row, col):
+        print("Sorry, someone has already played in that spot. Pick a new one")
+        row = positionAllowed(F"{player} what row would you like to play in? Pick a value 1,2 or 3") - 1
+        col = positionAllowed(F"{player} which column would you like to play in? Pick a value 1,2 or 3") - 1
+
+    #now we finally have a legal value! update the board and display it
     gameBoard[row][col] = symbol
-else:
-    print("Sorry, someone has already played in that spot. Pick a new one")
-printBoard()
-
-
-
-
+    printBoard()
+    #check if there is a winner
+    currentCol = gameBoard[row][col] + gameBoard[row - 1][col] + gameBoard[row - 2][col]
+    currentRow = gameBoard[row][col] + gameBoard[row][col -1] + gameBoard[row][col - 2]
+    #still need to add case for the diagonal
+    if currentCol == symbol*3 or currentRow == symbol*3:
+        gameOver = True
+        print(F"WOO HOO {player} has won the game!")
+        #add something to ask if we want to play again
+    #If there is no winner, swap the active player so we can take another turn    
+    else:
+        if player == "Player 1":
+            player = "Player 2"
+            symbol = "O"
+        else:
+            player = "Player 1"
+            symbol = "X"
