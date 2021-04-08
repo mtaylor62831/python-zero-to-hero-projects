@@ -74,5 +74,9 @@ def playGame():
     else:
         print("Thanks for playing! Enjoy the rest of your day")
 
+    while not legalPlay(row, col):
+        print("Sorry, someone has already played in that spot. Pick a new one")
+        row = positionAllowed(F"{player} what row would you like to play in? Pick a value 1,2 or 3") - 1
+        col = positionAllowed(F"{player} which column would you like to play in? Pick a value 1,2 or 3") - 1
 
 playGame()
